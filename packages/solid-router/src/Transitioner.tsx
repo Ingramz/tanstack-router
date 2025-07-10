@@ -6,7 +6,7 @@ import {
 } from '@tanstack/router-core'
 import { useRouter } from './useRouter'
 import { useRouterState } from './useRouterState'
-import { usePrevious } from './utils'
+import { useLayoutEffect, usePrevious } from './utils'
 
 export function Transitioner() {
   const router = useRouter()
@@ -65,8 +65,7 @@ export function Transitioner() {
   })
 
   // Try to load the initial location
-  Solid.createRenderEffect(() => {
-    if (router.isServer) return
+  useLayoutEffect(() => {
     Solid.untrack(() => {
       if (
         // if we are hydrating from SSR, loading is triggered in ssr-client
@@ -87,7 +86,7 @@ export function Transitioner() {
     })
   })
 
-  Solid.createRenderEffect(
+  useLayoutEffect(
     Solid.on(
       [previousIsLoading, isLoading],
       ([previousIsLoading, isLoading]) => {
@@ -100,7 +99,8 @@ export function Transitioner() {
       },
     ),
   )
-  Solid.createRenderEffect(
+
+  useLayoutEffect(
     Solid.on(
       [isPagePending, previousIsPagePending],
       ([isPagePending, previousIsPagePending]) => {
@@ -115,7 +115,7 @@ export function Transitioner() {
     ),
   )
 
-  Solid.createRenderEffect(
+  useLayoutEffect(
     Solid.on(
       [isAnyPending, previousIsAnyPending],
       ([isAnyPending, previousIsAnyPending]) => {
