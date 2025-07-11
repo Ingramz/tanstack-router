@@ -1,7 +1,9 @@
 import * as Solid from 'solid-js'
+import { isServer } from 'solid-js/web'
 
-export const useLayoutEffect =
-  typeof window !== 'undefined' ? Solid.createRenderEffect : Solid.createEffect
+export const useLayoutEffect = isServer
+  ? Solid.createEffect
+  : Solid.createRenderEffect
 
 export const usePrevious = (fn: () => boolean) => {
   return Solid.createMemo(
