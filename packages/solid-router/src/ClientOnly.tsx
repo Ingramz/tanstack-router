@@ -30,7 +30,13 @@ export interface ClientOnlyProps {
  * ```
  */
 export function ClientOnly(props: ClientOnlyProps) {
-  return useHydrated() ? <>{props.children}</> : <>{props.fallback}</>
+  const hydrated = useHydrated()
+
+  return (
+    <Solid.Show when={hydrated()} fallback={props.fallback}>
+      <>{props.children}</>
+    </Solid.Show>
+  )
 }
 
 /**
@@ -53,7 +59,7 @@ export function ClientOnly(props: ClientOnlyProps) {
  * @returns A signal accessor function that returns true if the JS has been hydrated already, false otherwise.
  */
 export function useHydrated() {
-  const [hydrated, setHydrated] = Solid.createSignal(!isServer)
+  const [hydrated, setHydrated] = Solid.createSignal(false)
 
   if (!isServer) {
     Solid.createEffect(() => {
